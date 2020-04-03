@@ -25,7 +25,7 @@ from setuptools import find_packages
 
 # ======================================================================
 # project specific variables
-NAME = 'FlyingCircus'
+NAME = 'FlyingCircus_Numeric'
 VERSION_FILEPATH = os.path.join(NAME.lower(), '_version.py')
 README_FILEPATH = 'README.rst'
 
