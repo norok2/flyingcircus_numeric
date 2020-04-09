@@ -19,6 +19,11 @@ import doctest  # Test interactive Python examples
 import string  # Common string operations
 import itertools  # Functions creating iterators for efficient looping
 
+# :: External Imports
+import numpy as np  # NumPy (multidimensional numerical arrays library)
+import scipy as sp  # SciPy (signal and image processing library)
+import flyingcircus as fc  # Everything you always wanted to have in Python*
+
 from flyingcircus import INFO, PATH
 from flyingcircus import VERB_LVL, D_VERB_LVL, VERB_LVL_NAMES
 from flyingcircus import elapsed, report
@@ -55,7 +60,7 @@ def i_stack(
     arr = next(iter_arrs)
     ndim = arr.ndim + 1
     assert(-ndim <= axis < ndim)
-    axis %= ndim
+    axis = fc.valid_index(axis, ndim)
     base_shape = arr.shape
     shape = base_shape[:axis] + (num,) + base_shape[axis:]
     result = np.empty(shape, dtype=arr.dtype)
@@ -85,7 +90,7 @@ def i_split(arr, axis=-1):
             All yielded arrays have the same shape.
     """
     assert(-arr.ndim <= axis < arr.ndim)
-    axis %= arr.ndim
+    axis = fc.valid_index(axis, arr.ndim)
     for i in range(arr.shape[axis]):
         slicing = tuple(
             slice(None) if j != axis else i for j, d in enumerate(arr.shape))

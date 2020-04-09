@@ -980,7 +980,7 @@ def separate(
           [10 11]]]
     """
     assert (-arr.ndim <= axis < arr.ndim)
-    axis %= arr.ndim
+    axis = fc.valid_index(axis, arr.ndim)
     if arr.shape[axis] % size != 0:
         aligned = fc.align(arr.shape[axis], size, -1 if truncate else 1)
         if truncate:
@@ -1120,10 +1120,10 @@ def compute_edge_weights(
                 **weighting_kws),
             weighting(
                 arr[tuple(
-                    slice(None) if i != j else fc.flip(windows[0])
+                    slice(None) if i != j else fc.flip_slice(windows[0])
                     for j in range(arr.ndim))],
                 arr[tuple(
-                    slice(None) if i != j else fc.flip(windows[1])
+                    slice(None) if i != j else fc.flip_slice(windows[1])
                     for j in range(arr.ndim))],
                 **weighting_kws)
             if circular else
@@ -1141,7 +1141,7 @@ def compute_edge_weights(
                     slice(None) if i != j else window
                     for j in range(idx_arr.ndim))],
                 idx_arr[tuple(
-                    slice(None) if i != j else fc.flip(window)
+                    slice(None) if i != j else fc.flip_slice(window)
                     for j in range(idx_arr.ndim))]
                 if circular else
                 np.full(tuple(
@@ -1714,7 +1714,7 @@ def ndot(
         - flyingcircus.extra.mdot_()
     """
     assert (-arr.ndim <= axis < arr.ndim)
-    axis %= arr.ndim
+    axis = fc.valid_index(axis, arr.ndim)
     mask = tuple(
         slice(None) if j != axis else slicing for j in range(arr.ndim))
     s_dim = arr[mask].shape[axis]
