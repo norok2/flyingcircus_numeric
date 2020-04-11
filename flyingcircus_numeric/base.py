@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-flyingcircus.extra: generic extra utilities (numerical).
+flyingcircus_numeric.base: Base subpackage.
 """
 
 # ======================================================================
@@ -6711,12 +6711,12 @@ def rotation2angles(
     angles = np.zeros(n_angles)
     res = sp.optimize.root(
         lambda x: np.ravel(
-            flyingcircus_numeric.extra.angles2rotation(
+            angles2rotation(
                 x, n_dim=n_dim, axes_list=axes_list, use_degree=use_degree)
             - lin_mat),
         angles, method='lm')
     result = res.x
-    est_lin_mat = flyingcircus_numeric.extra.angles2rotation(
+    est_lin_mat = angles2rotation(
         result, n_dim=n_dim, axes_list=axes_list, use_degree=use_degree)
     if np.all(np.isclose(lin_mat, est_lin_mat)):
         return result.tolist()
