@@ -29,6 +29,6 @@ clone the source repository from
 
 .. code:: bash
 
-    $ git clone git@github.com:norok2/flyingcircus.git
+    $ git clone git@github.com:norok2/flyingcircus_numeric.git
     $ cd flyingcircus
     $ pip install -e .

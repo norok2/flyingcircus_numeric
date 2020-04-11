@@ -19,13 +19,17 @@ Overview
 
 This software provides a library of miscellaneous utilities / recipes for
 generic computations with Python and NumPy / SciPy.
-This code was originally included in FlyingCircus, but is now living in a
-separate package to avoid pulling larger dependencies to those users not in
-need of NumPy / SciPy functionalities.
+This code was originally included in
+`FlyingCircus <https://pypi.python.org/pypi/flyingcircus>`__, but is now
+living in a separate package to avoid pulling larger dependencies to those
+users not in need of NumPy / SciPy functionalities.
 It is relatively easy to extend and users are encouraged to tweak with it.
 
 Most of the code is used in a number of projects where it is tested
 against real-life scenarios.
+
+All the code is tested against the examples in the documentation
+(using `doctest <https://docs.python.org/3/library/doctest.html>`__).
 
 The code has reached a reasonable level of maturity.
 However, until it gets a wider adoption, some of the library components may

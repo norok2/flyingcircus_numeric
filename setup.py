@@ -90,7 +90,7 @@ def fix_version(
 setup(
     name=NAME.lower(),
 
-    description='Everything you always wanted to have in Python.*',
+    description='FlyingCircus with NumPy/SciPy.',
     long_description=LONG_DESCRIPTION_TEXT,
 
     version=fix_version(),
