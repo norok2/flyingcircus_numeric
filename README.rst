@@ -1,9 +1,7 @@
 FlyingCircus
 ============
 
-**FlyingCircus** - Everything you always wanted to have in Python.\*
-
-(\*But were afraid to write)
+**FlyingCircus-Numeric** - FlyingCircus with NumPy/Scipy.
 
 .. code::
 
@@ -21,14 +19,18 @@ Overview
 
 This software provides a library of miscellaneous utilities / recipes for
 generic computations with Python and NumPy / SciPy.
+This code was originally included in FlyingCircus, but is now living in a
+separate package to avoid pulling larger dependencies to those users not in
+need of NumPy / SciPy functionalities.
 It is relatively easy to extend and users are encouraged to tweak with it.
 
 Most of the code is used in a number of projects where it is tested
 against real-life scenarios.
 
-As a result of the code maturity, some of the library components may
-undergo (eventually heavy) refactoring.
-While this is not expected, this will be documented.
+The code has reached a reasonable level of maturity.
+However, until it gets a wider adoption, some of the library components may
+undergo some refactoring in the process of improving the code.
+Changes will appear in the ``CHANGELOG.rst``.
 Please file a bug report if you detect an undocumented refactoring.
 
 Releases information are available through ``NEWS.rst``.
@@ -40,22 +42,8 @@ generated from the version control system).
 Features
 --------
 
-The package contain two main sub-packages:
-
--  ``base``
-
-
-The package ``base`` contains a number of generic functions like
-
--  ``multi_replace()``: performs multiple replacements in a string.
--  ``flatten()``: recursively flattens nested iterables, e.g.
-   list of list of tuples to flat list).
--  ``uniques()``: extract unique items from an iterable while
-   keeping the order of appearance.
-
-etc.
-
-The package ``extra`` (which requires both ``numpy`` and ``scipy``)
+The package (which requires both ``numpy`` and ``scipy``
+-- as well as `FlyingCircus <https://pypi.python.org/pypi/flyingcircus>`__) --
 contains a number of numerical functions, typically
 working on or generating ``numpy.ndarray`` inputs, like:
 
@@ -67,26 +55,25 @@ working on or generating ``numpy.ndarray`` inputs, like:
 
 etc.
 
-Additional packages may be added in the future.
-
+These are meant to run both in Python 3
 
 Installation
 ------------
 
 The recommended way of installing the software is through
-`PyPI <https://pypi.python.org/pypi/flyingcircus>`__:
+`PyPI <https://pypi.python.org/pypi/flyingcircus_numeric>`__:
 
 .. code:: bash
 
-    $ pip install flyingcircus
+    $ pip install flyingcircus_numeric
 
 Alternatively, you can clone the source repository from
-`Bitbucket <https://bitbucket.org/norok2/flyingcircus>`__:
+`Bitbucket <https://github.com/norok2/flyingcircus_numeric>`__:
 
 .. code:: bash
 
-    $ git clone git@bitbucket.org:norok2/flyingcircus.git
-    $ cd flyingcircus
+    $ git clone git@github.com:norok2/flyingcircus_numeric.git
+    $ cd flyingcircus_numeric
     $ pip install -e .
 
 For more details see also ``INSTALL.rst``.

@@ -2,7 +2,7 @@
 News
 ====
 
-Jul 2018
+Apr 2020
 --------
-- Initial porting of functionalities from previous projects,
-  notably ``pymrt`` (https://pypi.org/project/pymrt/).
+- Initial porting of functionality from
+  ``flyingcircus`` (https://pypi.org/project/flyingcircus/).
