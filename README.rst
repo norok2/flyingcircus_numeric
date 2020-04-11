@@ -72,7 +72,7 @@ The recommended way of installing the software is through
     $ pip install flyingcircus_numeric
 
 Alternatively, you can clone the source repository from
-`Bitbucket <https://github.com/norok2/flyingcircus_numeric>`__:
+`GitHub <https://github.com/norok2/flyingcircus_numeric>`__:
 
 .. code:: bash
 
