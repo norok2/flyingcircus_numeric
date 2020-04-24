@@ -1608,8 +1608,9 @@ def unsqueeze(
                     'Length of new shape {} does not match '
                     'expected length ({}).'.format(len(new_shape), ndim))
         else:
-            if not all(new_dim == 1 or new_dim == dim
-                       for new_dim, dim in zip(new_shape, shape)):
+            if not all(
+                    new_dim in {1, dim}
+                    for new_dim, dim in zip(new_shape, shape)):
                 raise ValueError(
                     'New shape {} cannot be broadcasted to shape {}'.format(
                         new_shape, shape))
@@ -3991,7 +3992,7 @@ def symmetric_padding(
                         low + dim + up))
                 for i in range(
                     fc.div_ceil(low, dim) + fc.div_ceil(up,
-                                                                  dim) + 1))
+                                                        dim) + 1))
             for dim, (low, up) in zip(arr.shape, width))
         len_target_slices = tuple(len(items) for items in target_slices)
         parities = tuple(
