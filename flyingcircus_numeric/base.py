@@ -53,6 +53,44 @@ from flyingcircus import HAS_JIT, jit
 
 
 # ======================================================================
+def update_slicing(
+        slicing,
+        index,
+        value,
+        container=None):
+    """
+    Update a slicing at a specific position.
+
+    Args:
+        slicing (Sequence[int|tuple|slice]): A n-dim slicing.
+        index (int): The index to update.
+        value (int|tuple|slice): The new value.
+        container (callable|None): The container for the result.
+            If None, this is inferred from `slicing` if possible, otherwise
+            uses `tuple`.
+
+    Returns:
+        tuple: The updated slicing.
+
+    Examples:
+        >>> slicing = (slice(None),) * 2
+        >>> print(slicing)
+        (slice(None, None, None), slice(None, None, None))
+        >>> print(update_slicing(slicing, 1, slice(0, 2)))
+        (slice(None, None, None), slice(0, 2, None))
+    """
+    if container is None:
+        container = type(slicing)
+    if not callable(container):
+        container = tuple
+    n_dim = len(slicing)
+    index = fc.valid_index(index, n_dim)
+    result = list(slicing)
+    result[index] = value
+    return container(result)
+
+
+# ======================================================================
 def arange_nd(shape):
     """
     Generate sequential numbers shaped in a n-dim array.
@@ -4110,6 +4148,159 @@ def padding(
         mask = (slice(None),) * arr.ndim
         result = arr
     return result, mask
+
+
+# ======================================================================
+def swap(
+        arr,
+        source,
+        target,
+        axis=None):
+    """
+    Swap element(s) of an array.
+
+    This function modifies the input array.
+
+    Args:
+        arr (np.ndarray): The input array.
+        source (int|Iterable[int]): The source index(es) to switch.
+            If Iterable, its length must match that of target.
+            Each index is forced within boundaries.
+        target (int|Iterable[int]): The source index(es) to switch.
+            If Iterable, its length must match that of source.
+            Each index is forced within boundaries.
+        axis (int|None): The axis along which to operate.
+            If None, operates on the flattened array.
+
+    Returns:
+        np.ndarray: The output array.
+
+    Examples:
+        >>> arr = arange_nd((3, 8))
+        >>> print(arr)
+        [[ 0  1  2  3  4  5  6  7]
+         [ 8  9 10 11 12 13 14 15]
+         [16 17 18 19 20 21 22 23]]
+        >>> print(swap(arr.copy(), 0, 1))
+        [[ 1  0  2  3  4  5  6  7]
+         [ 8  9 10 11 12 13 14 15]
+         [16 17 18 19 20 21 22 23]]
+        >>> print(swap(arr.copy(), 0, 1, 0))
+        [[ 8  9 10 11 12 13 14 15]
+         [ 0  1  2  3  4  5  6  7]
+         [16 17 18 19 20 21 22 23]]
+        >>> print(swap(arr.copy(), 0, 1, 1))
+        [[ 1  0  2  3  4  5  6  7]
+         [ 9  8 10 11 12 13 14 15]
+         [17 16 18 19 20 21 22 23]]
+        >>> print(swap(arr.copy(), (0, 1), (1, 2), 1))
+        [[ 1  2  0  3  4  5  6  7]
+         [ 9 10  8 11 12 13 14 15]
+         [17 18 16 19 20 21 22 23]]
+        >>> print(swap(arr.copy(), (1, 2), (0, 1), 1))
+        [[ 1  2  0  3  4  5  6  7]
+         [ 9 10  8 11 12 13 14 15]
+         [17 18 16 19 20 21 22 23]]
+        >>> print(swap(arr.copy(), (1, 2), (3, 4), 1))
+        [[ 0  3  4  1  2  5  6  7]
+         [ 8 11 12  9 10 13 14 15]
+         [16 19 20 17 18 21 22 23]]
+        >>> print(swap(arr.copy(), (3, 4), (1, 2), 1))
+        [[ 0  3  4  1  2  5  6  7]
+         [ 8 11 12  9 10 13 14 15]
+         [16 19 20 17 18 21 22 23]]
+    """
+    if axis is None:
+        shape = arr.shape
+        arr = arr.ravel()
+    else:
+        slicing = (slice(None),) * arr.ndim
+    source = fc.auto_repeat(source, 1)
+    target = fc.auto_repeat(target, 1)
+    n = arr.shape[axis] if axis is not None else arr.size
+    for src, tgt in zip(source, target):
+        src = fc.valid_index(src, n)
+        src = fc.valid_index(src, n)
+        if axis is not None:
+            src = update_slicing(slicing, axis, src)
+            tgt = update_slicing(slicing, axis, tgt)
+        temp = arr[src].copy()
+        arr[src] = arr[tgt]
+        arr[tgt] = temp
+    if axis is None:
+        arr = arr.reshape(shape)
+    return arr
+
+
+# ======================================================================
+def rearrange(
+        arr,
+        source,
+        target,
+        axis=None):
+    """
+    Rearrange element(s) of an array.
+
+    The elements are rearranged so that the element(s) at the `source`
+    position are inserted at the `target` position.
+
+    This function modifies the input array.
+
+    Args:
+        arr (np.ndarray): The input array.
+        source (int|Iterable[int]): The source index(es) to switch.
+            If Iterable, its length must match that of target.
+            Each index is forced within boundaries.
+        target (int|Iterable[int]): The source index(es) to switch.
+            If Iterable, its length must match that of source.
+            Each index is forced within boundaries.
+        axis (int|None): The axis along which to operate.
+            If None, operates on the flattened array.
+
+    Returns:
+        np.ndarray: The output array.
+
+    Examples:
+        >>> arr = arange_nd((3, 8))
+        >>> print(arr)
+        [[ 0  1  2  3  4  5  6  7]
+         [ 8  9 10 11 12 13 14 15]
+         [16 17 18 19 20 21 22 23]]
+        >>> print(rearrange(arr.copy(), 0, 1))
+        [[ 1  0  2  3  4  5  6  7]
+         [ 8  9 10 11 12 13 14 15]
+         [16 17 18 19 20 21 22 23]]
+        >>> print(rearrange(arr.copy(), 1, 14))
+        [[ 0  2  3  4  5  6  7  8]
+         [ 9 10 11 12 13 14  1 15]
+         [16 17 18 19 20 21 22 23]]
+        >>> print(rearrange(arr.copy(), 1, 4, 1))
+        [[ 0  2  3  4  1  5  6  7]
+         [ 8 10 11 12  9 13 14 15]
+         [16 18 19 20 17 21 22 23]]
+    """
+    if axis is None:
+        shape = arr.shape
+        arr = arr.ravel()
+        n = arr.size
+    else:
+        n = arr.shape[axis]
+    source = fc.valid_index(source, n)
+    target = fc.valid_index(target, n)
+    if source > target:
+        source, target = target, source
+        shift = 1
+    else:
+        shift = -1
+    slicing = slice(source, target + 1)
+    if axis is not None:
+        slicing = tuple(
+            slice(None) if i != axis else slicing
+            for i, d in enumerate(arr.shape))
+    arr[slicing] = np.roll(arr[slicing], shift=shift, axis=axis)
+    if axis is None:
+        arr = arr.reshape(shape)
+    return arr
 
 
 # ======================================================================
