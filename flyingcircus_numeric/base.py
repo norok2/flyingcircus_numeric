@@ -493,6 +493,114 @@ def multi_slicing(
 
 
 # ======================================================================
+def find_by_1d(
+        haystack,
+        needles,
+        haystack_axis=0,
+        needles_axis=0,
+        keepdims=False):
+    """
+    Find the index(es) of a 1D subarrays inside another array.
+
+    The followng relation must hold:
+    haystack.shape[haystack_axis] == needles.shape[needles_axis]
+
+    Args:
+        haystack (np.ndarray): The array where to find the needle.
+        needles (np.ndarray): The needles to find in the haystack.
+        haystack_axis (int): The haystack axis along which to operate.
+        needles_axis (int): The needles axis along which to operate.
+        keepdims (bool): Keep all the dimensions of the result.
+            If False, the dimension of haystack is squeezed if there is only
+            one dimension (aside of the comparing dimension).
+
+    Returns:
+        np.ndarray[int]: The indices where the needles have been found.
+
+    Examples:
+        >>> haystack = arange_nd((3, 8)) + 1
+        >>> print(haystack)
+        [[ 1  2  3  4  5  6  7  8]
+         [ 9 10 11 12 13 14 15 16]
+         [17 18 19 20 21 22 23 24]]
+        >>> needles = np.array([[1, 9, 17], [2, 10, 18]]).T
+        >>> print(needles)
+        [[ 1  2]
+         [ 9 10]
+         [17 18]]
+        >>> print(find_by_1d(haystack, needles))
+        [0 1]
+        >>> needles = np.array([[1, 9, 17], [2, 11, 18]]).T
+        >>> print(needles)
+        [[ 1  2]
+         [ 9 11]
+         [17 18]]
+        >>> print(find_by_1d(haystack, needles))
+        [ 0 -1]
+
+        >>> haystack = arange_nd((2, 12)) + 1
+        >>> print(haystack)
+        [[ 1  2  3  4  5  6  7  8  9 10 11 12]
+         [13 14 15 16 17 18 19 20 21 22 23 24]]
+        >>> needles = np.array([[1, 13], [2, 14], [9, 21], [11, 23]]).T
+        >>> needles = needles.reshape((-1, 2, 2))
+        >>> print(find_by_1d(haystack, needles))
+        [[ 0  1]
+         [ 8 10]]
+        >>> needles = np.array([[1, 13], [2, 14], [10, 21], [11, 23]]).T
+        >>> needles = needles.reshape((-1, 2, 2))
+        >>> print(find_by_1d(haystack, needles))
+        [[ 0  1]
+         [-1 10]]
+
+        >>> haystack = arange_nd((2, 3, 4)) + 1
+        >>> print(haystack)
+        [[[ 1  2  3  4]
+          [ 5  6  7  8]
+          [ 9 10 11 12]]
+        <BLANKLINE>
+         [[13 14 15 16]
+          [17 18 19 20]
+          [21 22 23 24]]]
+        >>> needles = np.array([[1, 13], [2, 14], [9, 21], [11, 23]]).T
+        >>> needles = needles.reshape((-1, 2, 2))
+        >>> print(find_by_1d(haystack, needles))
+        [[[0 0]
+          [2 2]]
+        <BLANKLINE>
+         [[0 1]
+          [0 2]]]
+        >>> needles = np.array([[1, 13], [2, 14], [10, 21], [11, 23]]).T
+        >>> needles = needles.reshape((-1, 2, 2))
+        >>> print(find_by_1d(haystack, needles))
+        [[[ 0  0]
+          [-1  2]]
+        <BLANKLINE>
+         [[ 0  1]
+          [-1  2]]]
+    """
+    haystack_axis = fc.valid_index(haystack_axis, haystack.ndim)
+    needles_axis = fc.valid_index(needles_axis, needles.ndim)
+    if haystack_axis:
+        haystack = haystack.swapaxes(0, haystack_axis)
+    if needles_axis:
+        needles = needles.swapaxes(0, needles_axis)
+    n = needles.shape[0]
+    m = haystack.ndim - 1
+    shape = haystack.shape[1:]
+    result = np.full((m,) + needles.shape[1:], -1)
+    haystack = haystack.reshape(n, -1)
+    needles = needles.reshape(n, -1)
+    _, match, index = np.nonzero(np.all(
+        haystack[:, None, :] == needles[:, :, None],
+        axis=0, keepdims=True))
+    result.reshape(m, -1)[:, match] = np.unravel_index(index, shape)
+    if not keepdims and result.shape[0] == 1:
+        result = np.squeeze(result, 0)
+    return result
+
+
+# ======================================================================
 def nbytes(arr):
     """
     Determine the actual memory consumption of a NumPy array.
