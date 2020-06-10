@@ -502,7 +502,7 @@ def find_by_1d(
     """
     Find the index(es) of a 1D subarrays inside another array.
 
-    The followng relation must hold:
+    The following relation must hold:
     haystack.shape[haystack_axis] == needles.shape[needles_axis]
 
     Args:
