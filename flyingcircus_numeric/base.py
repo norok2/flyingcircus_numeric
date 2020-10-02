@@ -1148,6 +1148,167 @@ def separate(
 
 
 # ======================================================================
+def group_by(
+        arr,
+        axis=None,
+        index=None,
+        keepdims=True,
+        slices=True,
+        both=True):
+    """
+    Separate an array into blocks according to values along a specific axis.
+
+    Args:
+        arr (np.ndarray): The input array.
+        axis (int|Iterable[int]|None): The axis along which to operate.
+            If None, operates on the raveled input.
+        index (int|slice|Iterable[int|slice|None]|None): Indices to consider.
+            If None, all indices are considered.
+            If int or slice, this is applied to the first non-axis dimension.
+            If Iterable of int, slice or None, this is applied to all non-axis
+            dimensions, with None being equivalent to the full slice.
+            Only the specified indices are considered.
+        keepdims (bool): Keep all the dimensions for the results.
+            If True, yields the full tuple of slices, with the slice
+            at the axis position containing the delimiting extrema.
+            If both `slices` and `both` are not True, the parameter is ignored.
+        slices (bool): Yield the slices.
+            If True, yields the slice that would split the input.
+            Otherwise, yields the slices containing the delimiting extrema.
+            If `both` is not True, the parameter is ignored.
+        both (bool): Yields both extrema at the same time.
+            If True, the second value of one yield is the same as
+            the first value of the subsequent yield.
+            Otherwise, returns the indices at which the next grop begins
+            (and finally the size of the array on the axis being grouped by.
+            This would be the least redundant information.
+
+    Yields:
+        int|tuple[int]|slice|tuple[slice]: The extrema of the groups.
+            If `both` is False, yields the single integers one by one.
+            Otherwise, if `slices` is False, yields both delimiting extrema
+            in a 2-tuple.
+            Otherwise, if `keepdims` is False, yields the delimiting extrema
+            as a slice.
+            Otherwise, the full tuple of slices is yielded, where the
+            delimiting extrema are in the specified axis.
+
+    Examples:
+        >>> arr = np.array([2, 2, 2, 4, 4, 6, 6, 6])
+        >>> list(group_by(arr))
+        [slice(0, 3, None), slice(3, 5, None), slice(5, 8, None)]
+        >>> list(group_by(arr, 0, None))
+        [(slice(0, 3, None),), (slice(3, 5, None),), (slice(5, 8, None),)]
+        >>> list(group_by(arr, 0, None, False))
+        [slice(0, 3, None), slice(3, 5, None), slice(5, 8, None)]
+        >>> list(group_by(arr, 0, None, False, False))
+        [(0, 3), (3, 5), (5, 8)]
+        >>> list(group_by(arr, 0, None, False, False, False))
+        [0, 3, 5, 8]
+
+        >>> arr = np.array([[1, 1, 2, 2], [2, 2, 2, 2]])
+        >>> list(group_by(arr))
+        [slice(0, 2, None), slice(2, 8, None)]
+        >>> list(group_by(arr, 1))
+        [(slice(None, None, None), slice(0, 2, None)),\
+ (slice(None, None, None), slice(2, 4, None))]
+        >>> list(group_by(arr, 1, None, False))
+        [slice(0, 2, None), slice(2, 4, None)]
+        >>> list(group_by(arr, 1, None, False, False))
+        [(0, 2), (2, 4)]
+        >>> list(group_by(arr, 1, None, False, False, False))
+        [0, 2, 4]
+
+        >>> arr = np.array([[1, 1, 1, 1], [1, 1, 2, 2], [1, 2, 3, 4]])
+        >>> list(group_by(arr, -1, 0, False, False, False))
+        [0, 4]
+        >>> list(group_by(arr, -1, 1, False, False, False))
+        [0, 2, 4]
+        >>> list(group_by(arr, -1, 2, False, False, False))
+        [0, 1, 2, 3, 4]
+        >>> list(group_by(arr, -1, 0))
+        [(slice(None, None, None), slice(0, 4, None))]
+
+        >>> arr = np.array([[[1, 2, 3], [1, 1, 3]], [[1, 2, 3], [1, 3, 3]]])
+        >>> list(group_by(arr, -1, (0, None)))
+        [\
+(slice(None, None, None), slice(None, None, None), slice(0, 1, None)),
+(slice(None, None, None), slice(None, None, None), slice(1, 2, None)),
+(slice(None, None, None), slice(None, None, None), slice(2, 3, None))]
+        [\
+(slice(None, None, None), slice(None, None, None), slice(0, 1, None)), \
+(slice(None, None, None), slice(None, None, None), slice(1, 3, None))]
+        >>> list(group_by(arr, -1, (0, 1)))
+        [\
+(slice(None, None, None), slice(None, None, None), slice(0, 2, None)), \
+(slice(None, None, None), slice(None, None, None), slice(2, 3, None))]
+        >>> list(group_by(arr, -1, (0, 0)))
+        [\
+(slice(None, None, None), slice(None, None, None), slice(0, 1, None)), \
+(slice(None, None, None), slice(None, None, None), slice(1, 2, None)), \
+(slice(None, None, None), slice(None, None, None), slice(2, 3, None))]
+    """
+    if axis is None:
+        arr = arr.ravel()
+        axis = 0
+        index = None
+        keepdims = False
+    assert (-arr.ndim <= axis < arr.ndim)
+    axis = fc.valid_index(axis, arr.ndim)
+    if isinstance(index, int):
+        index = (index,)
+    if index is not None:
+        assert(arr.ndim == len(index) + 1)
+    slicing = (slice(None),) * arr.ndim
+    size = arr.shape[axis]
+    if index is None:
+        base = slicing
+    else:
+        index = [
+            x if isinstance(x, slice) else
+            slice(x, x + 1) if isinstance(x, int) else
+            slice(None)
+            for x in index]
+        base = tuple(
+            None if i == axis else index[i] if i < axis else index[i - 1]
+            for i, d in enumerate(arr.shape))
+    start = update_slicing(base, axis, slice(None, -1))
+    stop = update_slicing(base, axis, slice(1, None))
+    delta = (arr[start] != arr[stop])
+    if delta.ndim > 1:
+        delta_axis = tuple(x for x in range(arr.ndim) if x != axis)
+        delta = np.any(delta, delta_axis)
+    extrema = np.nonzero(delta)[0] + 1
+    if both:
+        if slices:
+            if keepdims:
+                last_value = 0
+                for value in extrema:
+                    yield update_slicing(
+                        slicing, axis, slice(last_value, value))
+                    last_value = value
+                yield update_slicing(
+                        slicing, axis, slice(last_value, size))
+            else:
+                last_value = 0
+                for value in extrema:
+                    yield slice(last_value, value)
+                    last_value = value
+                yield slice(last_value, size)
+        else:
+            last_value = 0
+            for value in extrema:
+                yield last_value, value
+                last_value = value
+            yield last_value, size
+    else:
+        yield 0
+        for value in extrema:
+            yield value
+        yield size
+
+
+# ======================================================================
 def compute_edge_weights(
         arr,
         weighting=lambda x, y: x + y,
