@@ -2187,6 +2187,8 @@ def normalize(
         array([0, 0, 0, 0, 0])
         >>> normalize(np.ones(4))
         array([0.5, 0.5, 0.5, 0.5])
+        >>> normalize(np.ones(8), np.sum)
+        array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])
         >>> normalize(np.ones(8), lambda x: p_norm(x, 3))
         array([0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])
         >>> arr = np.array([3.0, 4.0])
