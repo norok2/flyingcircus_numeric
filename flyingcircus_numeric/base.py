@@ -2150,8 +2150,11 @@ def p_norm(
         [45.0, 372.72, 3248.16, 28740.24, 255959.55, 2287279.92]
     """
     assert (p > 0)
-    return np.sum(np.abs(arr) ** p) ** (1 / p)
-
+    if not p % 2 and isinstance(p, int):
+        return np.sum((arr * arr.conjugate()).real ** (p // 2)) ** (1 / p)
+    else:
+        # return np.sum(np.abs(arr) ** p) ** (1 / p)
+        return np.sum((arr * arr.conjugate()).real ** (p / 2)) ** (1 / p)
 
 # ======================================================================
 def normalize(
