@@ -1232,12 +1232,9 @@ def group_by(
         >>> arr = np.array([[[1, 2, 3], [1, 1, 3]], [[1, 2, 3], [1, 3, 3]]])
         >>> list(group_by(arr, -1, (0, None)))
         [\
-(slice(None, None, None), slice(None, None, None), slice(0, 1, None)),
-(slice(None, None, None), slice(None, None, None), slice(1, 2, None)),
-(slice(None, None, None), slice(None, None, None), slice(2, 3, None))]
-        [\
 (slice(None, None, None), slice(None, None, None), slice(0, 1, None)), \
-(slice(None, None, None), slice(None, None, None), slice(1, 3, None))]
+(slice(None, None, None), slice(None, None, None), slice(1, 2, None)), \
+(slice(None, None, None), slice(None, None, None), slice(2, 3, None))]
         >>> list(group_by(arr, -1, (0, 1)))
         [\
 (slice(None, None, None), slice(None, None, None), slice(0, 2, None)), \
@@ -1258,7 +1255,7 @@ def group_by(
     if isinstance(index, int):
         index = (index,)
     if index is not None:
-        assert(arr.ndim == len(index) + 1)
+        assert (arr.ndim == len(index) + 1)
     slicing = (slice(None),) * arr.ndim
     size = arr.shape[axis]
     if index is None:
@@ -1288,7 +1285,7 @@ def group_by(
                         slicing, axis, slice(last_value, value))
                     last_value = value
                 yield update_slicing(
-                        slicing, axis, slice(last_value, size))
+                    slicing, axis, slice(last_value, size))
             else:
                 last_value = 0
                 for value in extrema:
@@ -2067,13 +2064,13 @@ def alternating_array(
         array([1., 2., 3., 1., 2., 3., 1., 2., 3., 1.])
         >>> values = (1, 2, 3)
         >>> size = 100
-        >>> np.all(np.isclose(
+        >>> np.allclose(
         ...     alternating_array(size, values),
-        ...     [values[i % len(values)] for i in range(size)]))
+        ...     [values[i % len(values)] for i in range(size)])
         True
-        >>> np.all(np.isclose(
+        >>> np.allclose(
         ...     alternating_array(size, values),
-        ...     [x for x in itertools.islice(itertools.cycle(values), size)]))
+        ...     [x for x in itertools.islice(itertools.cycle(values), size)])
         True
 
     """
@@ -7076,7 +7073,7 @@ def rotation2angles(
         >>> est_angles = rotation2angles(lin_mat)
         >>> print([round(x, 3) for x in est_angles])
         [90.0]
-        >>> print(np.all(np.isclose(angles, est_angles)))
+        >>> print(np.allclose(angles, est_angles))
         True
 
         >>> angles = [30.0]
@@ -7084,7 +7081,7 @@ def rotation2angles(
         >>> est_angles = rotation2angles(lin_mat)
         >>> print([round(x, 3) for x in est_angles])
         [30.0]
-        >>> print(np.all(np.isclose(angles, est_angles)))
+        >>> print(np.allclose(angles, est_angles))
         True
 
         >>> angles = [270.0]
@@ -7092,7 +7089,7 @@ def rotation2angles(
         >>> est_angles = rotation2angles(lin_mat)
         >>> print([round(x, 3) for x in est_angles])
         [-90.0]
-        >>> print(np.all(np.isclose(angles, np.array(est_angles) % 360)))
+        >>> print(np.allclose(angles, np.array(est_angles) % 360))
         True
 
         >>> # Fails for angle == 180.0
@@ -7108,7 +7105,7 @@ def rotation2angles(
         >>> est_angles = rotation2angles(lin_mat)
         >>> print([round(x, 3) for x in est_angles])
         [30.0, -0.0, -30.0]
-        >>> print(np.all(np.isclose(angles, est_angles)))
+        >>> print(np.allclose(angles, est_angles))
         True
 
         >>> angles = [30.0, 45.0, -30.0]
@@ -7116,7 +7113,7 @@ def rotation2angles(
         >>> est_angles = rotation2angles(lin_mat)
         >>> print([round(x, 3) for x in est_angles])
         [30.0, 45.0, -30.0]
-        >>> print(np.all(np.isclose(angles, est_angles)))
+        >>> print(np.allclose(angles, est_angles))
         True
 
         >>> angles = [15.0, -20.0, 75.0]
@@ -7124,18 +7121,18 @@ def rotation2angles(
         >>> est_angles = rotation2angles(lin_mat)
         >>> print([round(x, 3) for x in est_angles])
         [15.0, -20.0, 75.0]
-        >>> print(np.all(np.isclose(angles, est_angles)))
+        >>> print(np.allclose(angles, est_angles))
         True
 
         >>> angles = [15.0, 180.0, 75.0]
         >>> lin_mat = angles2rotation(angles)
         >>> est_angles = rotation2angles(lin_mat)
         >>> print([round(x, 3) for x in est_angles])
-        [-165.0, 0.0, -105.0]
+        [-165.0, -0.0, -105.0]
         >>> # not the same as the input, but the rotation matrix is the same
-        >>> print(np.all(np.isclose(angles, est_angles)))
+        >>> print(np.allclose(angles, est_angles))
         False
-        >>> print(np.all(np.isclose(angles2rotation(est_angles), lin_mat)))
+        >>> print(np.allclose(angles2rotation(est_angles), lin_mat))
         True
 
         >>> angles = [180.0, 180.0, 0.0]
@@ -7151,9 +7148,9 @@ def rotation2angles(
         >>> print([round(x, 3) for x in est_angles])
         [-0.0, 0.0, -0.0]
         >>> # not the same as the input, but the rotation matrix is the same
-        >>> print(np.all(np.isclose(angles, est_angles)))
+        >>> print(np.allclose(angles, est_angles))
         False
-        >>> print(np.all(np.isclose(angles2rotation(est_angles), lin_mat)))
+        >>> print(np.allclose(angles2rotation(est_angles), lin_mat))
         True
 
         >>> result = []
@@ -7162,7 +7159,7 @@ def rotation2angles(
         ...     angles = [x]
         ...     lin_mat = angles2rotation(angles)
         ...     est_angles = rotation2angles(lin_mat)
-        ...     res = np.all(np.isclose(angles, np.array(est_angles) % 360))
+        ...     res = np.allclose(angles, np.array(est_angles) % 360)
         ...     if not res: print(angles, est_angles)
         ...     result.append(res)
         >>> print(np.all(result))
@@ -7181,7 +7178,7 @@ def rotation2angles(
     result = res.x
     est_lin_mat = angles2rotation(
         result, n_dim=n_dim, axes_list=axes_list, use_degree=use_degree)
-    if np.all(np.isclose(lin_mat, est_lin_mat)):
+    if np.allclose(lin_mat, est_lin_mat):
         return result.tolist()
     else:
         raise ValueError(
@@ -7689,13 +7686,13 @@ def rotation_3d_from_vectors(
         array([[ 1.,  0.,  0.],
                [ 0.,  0., -1.],
                [ 0.,  1.,  0.]])
-        >>> np.all(np.isclose(vector2, np.dot(rot_matrix12, vector1)))
+        >>> np.allclose(vector2, np.dot(rot_matrix12, vector1))
         True
         >>> normal21 = np.cross(normalize(vector2), normalize(vector1))
         >>> rot_matrix21 = rotation_3d_from_vectors(vector2, vector1)
-        >>> np.all(np.isclose(vector1, np.dot(rot_matrix21, vector2)))
+        >>> np.allclose(vector1, np.dot(rot_matrix21, vector2))
         True
-        >>> np.all(np.isclose(np.eye(3), np.dot(rot_matrix12, rot_matrix21)))
+        >>> np.allclose(np.eye(3), np.dot(rot_matrix12, rot_matrix21))
         True
     """
     normal = np.cross(normalize(vector1), normalize(vector2))
@@ -8091,8 +8088,8 @@ def moving_apply(
         >>> num = 8
         >>> arr = np.linspace(1, num, num)
         >>> all(np.allclose(
-        ...                 moving_average(arr, n, mode=mode),
-        ...                 moving_apply(arr, n, mode=mode))
+        ...         moving_average(arr, n, mode=mode),
+        ...         moving_apply(arr, n, mode=mode))
         ...     for n in range(num) for mode in ('valid', 'same', 'full'))
         True
         >>> moving_apply(arr, 4, mode='same', borders=100)
@@ -8222,8 +8219,8 @@ def running_apply(
         >>> num = 8
         >>> arr = np.linspace(1, num, num)
         >>> all(np.allclose(
-        ...                 moving_average(arr, n, mode=mode),
-        ...                 running_apply(arr, n, mode=mode))
+        ...         moving_average(arr, n, mode=mode),
+        ...         running_apply(arr, n, mode=mode))
         ...     for n in range(num) for mode in ('valid', 'same', 'full'))
         True
         >>> running_apply(arr, 4, mode='same', borders=100)
