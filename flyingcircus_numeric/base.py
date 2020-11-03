@@ -1948,6 +1948,9 @@ def mdot(arrs):
         >>> mdot(arrs[::-1])
         array([[ 51152,  94155],
                [ 69456, 127847]])
+        >>> mdot(reversed(arrs))
+        array([[ 51152,  94155],
+               [ 69456, 127847]])
         >>> print(mdot([]))
         None
 
@@ -1955,10 +1958,12 @@ def mdot(arrs):
         - flyingcircus.extra.ndot()
         - flyingcircus.extra.mdot_()
     """
-    arr = arrs[0] if arrs else None
-    for item in arrs[1:]:
-        arr = np.dot(arr, item)
-    return arr
+    if arrs:
+        iter_arrs = iter(arrs)
+        arr = next(iter_arrs)
+        for item in iter_arrs:
+            arr = np.dot(arr, item)
+        return arr
 
 
 # ======================================================================
