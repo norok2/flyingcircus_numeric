@@ -1923,6 +1923,55 @@ def unsqueeze(
 
 
 # ======================================================================
+def powm(
+        arr,
+        num):
+    """
+    Compute the power-n matrix.
+
+    Args:
+        arr (np.ndarray): The input array.
+            Must be a square matrix.
+        num (int): The exponent.
+            Must be a non-negative integer.
+
+    Returns:
+        np.ndarray: The power-n matrix.
+
+    Raises:
+        ValueError: If `num < 0`.
+
+    Examples:
+         >>> arr = np.array([[1, 2], [3, 4]])
+         >>> powm(arr, 2)
+         array([[ 7, 10],
+                [15, 22]])
+        >>> powm(arr, 4)
+        array([[199, 290],
+               [435, 634]])
+        >>> np.all(powm(powm(arr, 2), 2) == powm(arr, 4))
+        True
+        >>> np.all(powm(powm(arr, 8), 2) == powm(arr, 16))
+        True
+    """
+    result = arr.copy()
+    if num < 0:
+        raise ValueError('`n` must be non-negative')
+    elif num == 0:
+        return np.eye(arr.shape[0], dtype=arr.dtype)
+    elif num < 4:
+        for i in range(1, num):
+            np.dot(result, arr, result)
+        return result
+    else:
+        log2_num = fc.ilog2(num)
+        for i in range(log2_num):
+            np.dot(result, result, result)
+        num_left = num - 2 ** log2_num
+        return np.dot(result, powmb(arr, num_left)) if num_left else result
+
+
+# ======================================================================
 def mdot(arrs):
     """
     Cumulative application of multiple `numpy.dot` operation.
@@ -2160,6 +2209,7 @@ def p_norm(
     else:
         # return np.sum(np.abs(arr) ** p) ** (1 / p)
         return np.sum((arr * arr.conjugate()).real ** (p / 2)) ** (1 / p)
+
 
 # ======================================================================
 def normalize(
