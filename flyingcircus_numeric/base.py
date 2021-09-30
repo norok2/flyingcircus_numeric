@@ -269,7 +269,7 @@ def ix_broadcast(slicing):
 
         arr[a, :, :][:, b, :][:, :, c]
 
-    To obtain the above use `flyingcircus.extra.multi_slicing()`.
+    To obtain the above use `flyingcircus_numeric.multi_slicing()`.
 
     Args:
         slicing (Iterable[slice|int|Iterable[int]]): A sequence of slices.
@@ -280,7 +280,7 @@ def ix_broadcast(slicing):
         result (tuple[slice|int|tuple[int]]: The broadcasted indexes.
 
     See Also:
-        - flyingcircus.extra.multi_slicing()
+        - flyingcircus_numeric.multi_slicing()
 
     Examples:
         >>> arr = arange_nd((3, 4, 5))
@@ -373,7 +373,7 @@ def ix_broadcast(slicing):
 # ======================================================================
 def ix_broadcast_(*slicing):
     """
-    Star magic version of `flyingcircus.extra.ix_broadcast()`.
+    Star magic version of `flyingcircus_numeric.ix_broadcast()`.
     """
     return ix_broadcast(slicing)
 
@@ -1055,7 +1055,7 @@ def separate(
     """
     Separate an array into blocks with fixed size along a specific axis.
 
-    This is equivalent to `flyingcircus.extra.nd_windowing()` with
+    This is equivalent to `flyingcircus_numeric.nd_windowing()` with
     `window == steps` and `window_steps == 1`.
 
     Additionally, this function offers better control over the handling of
@@ -1073,7 +1073,7 @@ def separate(
         fill (Any): Value to use for filling the last block.
             This is only used when `truncate` is False.
         shape_mode (str): Determine the shape of the result.
-            See `flyingcircus.extra.nd_windowing()` for more details.
+            See `flyingcircus_numeric.nd_windowing()` for more details.
 
     Returns:
         result (np.ndarray): The output array.
@@ -2004,8 +2004,8 @@ def mdot(arrs):
         None
 
     See Also:
-        - flyingcircus.extra.ndot()
-        - flyingcircus.extra.mdot_()
+        - flyingcircus_numeric.ndot()
+        - flyingcircus_numeric.mdot_()
     """
     if arrs:
         iter_arrs = iter(arrs)
@@ -2018,7 +2018,7 @@ def mdot(arrs):
 # ======================================================================
 def mdot_(*arrs):
     """
-    Star magic version of `flyingcircus.extra.mdot()`.
+    Star magic version of `flyingcircus_numeric.mdot()`.
     """
     return mdot(arrs)
 
@@ -2069,8 +2069,8 @@ def ndot(
         array([], shape=(0, 2, 2), dtype=int64)
 
     See Also:
-        - flyingcircus.extra.mdot()
-        - flyingcircus.extra.mdot_()
+        - flyingcircus_numeric.mdot()
+        - flyingcircus_numeric.mdot_()
     """
     assert (-arr.ndim <= axis < arr.ndim)
     axis = fc.valid_index(axis, arr.ndim)
@@ -2402,7 +2402,7 @@ def square_size_to_num_tria(
         True
 
     See Also:
-        - flyingcircus.extra.num_tria_to_square_size()
+        - flyingcircus_numeric.num_tria_to_square_size()
     """
     assert (square_size > 0)
     return square_size * (square_size + (1 if has_diag else -1)) // 2
@@ -2478,7 +2478,7 @@ def num_tria_to_square_size(
         ValueError: invalid number of triangular indices
 
     See Also:
-        - flyingcircus.extra.square_size_to_num_tria()
+        - flyingcircus_numeric.square_size_to_num_tria()
     """
     square_size = (((1 + 8 * num_tria) ** 0.5 + (-1 if has_diag else 1)) / 2)
     # alternatives to `divmod()`: numpy.modf(), math.modf()
@@ -2688,7 +2688,7 @@ def is_in_range(
     Args:
         arr (np.ndarray): The input array.
         interval (Any): The range of values to check.
-            See `flyingcircus.extra.valid_interval()` for details on the
+            See `flyingcircus_numeric.valid_interval()` for details on the
             accepted input.
         include_extrema (bool): Include extrema in the interval checks.
 
@@ -2724,12 +2724,12 @@ def scale(
         val (float|np.ndarray): Value(s) to convert.
         out_interval (Any): Interval of the output value(s).
             If None, set to: (0, 1).
-            See `flyingcircus.extra.valid_interval()` for details on the
+            See `flyingcircus_numeric.valid_interval()` for details on the
             accepted input.
         in_interval (Any): Interval of the input value(s).
             If None, and val is Iterable, it is calculated as:
             (min(val), max(val)), otherwise set to: (0, 1).
-            See `flyingcircus.extra.valid_interval()` for details on the
+            See `flyingcircus_numeric.valid_interval()` for details on the
             accepted input.
 
     Returns:
@@ -2776,10 +2776,10 @@ def combine_interval(
 
     Args:
         interval1 (Any): Interval of first operand.
-            See `flyingcircus.extra.valid_interval()` for details on the
+            See `flyingcircus_numeric.valid_interval()` for details on the
             accepted input.
         interval2 (Any): Interval of second operand.
-            See `flyingcircus.extra.valid_interval()` for details on the
+            See `flyingcircus_numeric.valid_interval()` for details on the
             accepted input.
         operation (str): String with operation to perform.
             Supports the following operations:
@@ -2824,12 +2824,12 @@ def scaled_randomizer(
         interval (Iterable[int|float]|Number): The scaled interval.
             Specifies the scaling interval of the random variation as relative
             to the value itself.
-            This is passed to `flyingcircus.extra.valid_interval()`.
+            This is passed to `flyingcircus_numeric.valid_interval()`.
         fallback_interval (Iterable[int|float]|Number): An interval.
             Specifies the fallback interval of the random variation in
             absolute terms.
             This is only used if the value is 0 or if `interval` is None.
-            This is passed to `flyingcircus.extra.valid_interval()`.
+            This is passed to `flyingcircus_numeric.valid_interval()`.
     Returns:
         result (int|float): The randomized value.
 
@@ -3400,7 +3400,7 @@ def coord(
             If callable, the reference is computed from `shape` which is
             passed as the first (and only) parameter using the function.
             The signature must be: is_relative(Iterable) -> int|float|Iterable.
-            Internally, uses `flyingcircus.extra.scale()`.
+            Internally, uses `flyingcircus_numeric.scale()`.
         use_int (bool): Force integer values for the coordinates.
 
     Returns:
@@ -3447,7 +3447,7 @@ def grid_coord(
         position (float|Iterable[float]): Relative position of the origin.
             Values are in the [0, 1] interval.
         is_relative (bool|callable): Interpret origin as relative.
-            See `flyingcircus.extra.coord()` for more info.
+            See `flyingcircus_numeric.coord()` for more info.
         dense (bool): Determine the type (dense or sparse) of the mesh-grid.
         use_int (bool): Force integer values for the coordinates.
 
@@ -3607,8 +3607,8 @@ def rel2abs(shape, size=0.5):
     """
     Calculate the absolute size from a relative size for a given shape.
 
-    This is a simple version of `flyingcircus.extra.scale()` and/or
-    `flyingcircus.extra.coord()`.
+    This is a simple version of `flyingcircus_numeric.scale()` and/or
+    `flyingcircus_numeric.coord()`.
 
     Args:
         shape (int|Iterable[int]): The shape of the container in px.
@@ -3634,9 +3634,9 @@ def rel2abs(shape, size=0.5):
         (0.0, 0.25, 0.5, 0.75, 1.0)
 
     See Also:
-        - flyingcircus.extra.abs2rel()
-        - flyingcircus.extra.coord()
-        - flyingcircus.extra.scale()
+        - flyingcircus_numeric.abs2rel()
+        - flyingcircus_numeric.coord()
+        - flyingcircus_numeric.scale()
     """
     size = fc.auto_repeat(size, len(shape), check=True)
     return tuple((s - 1.0) * p for p, s in zip(size, shape))
@@ -3647,7 +3647,7 @@ def abs2rel(shape, position=0):
     """
     Calculate the relative size from an absolute size for a given shape.
 
-    This is a simple version of `flyingcircus.extra.scale()`.
+    This is a simple version of `flyingcircus_numeric.scale()`.
 
     Args:
         shape (int|Iterable[int]): The shape of the container in px.
@@ -3673,9 +3673,9 @@ def abs2rel(shape, position=0):
         (0.0, 25.0, 50.0, 75.0, 100.0)
 
     See Also:
-        - flyingcircus.extra.rel2abs()
-        - flyingcircus.extra.coord()
-        - flyingcircus.extra.scale()
+        - flyingcircus_numeric.rel2abs()
+        - flyingcircus_numeric.coord()
+        - flyingcircus_numeric.scale()
     """
     position = fc.auto_repeat(position, len(shape), check=True)
     return tuple(p / (s - 1.0) for p, s in zip(position, shape))
@@ -4437,11 +4437,11 @@ def padding(
 
     See Also:
         - flyingcircus.multi_scale_to_int()
-        - flyingcircus.extra.const_padding()
-        - flyingcircus.extra.edge_padding()
-        - flyingcircus.extra.cyclic_padding()
-        - flyingcircus.extra.symmetric_padding()
-        - flyingcircus.extra.reframe()
+        - flyingcircus_numeric.const_padding()
+        - flyingcircus_numeric.edge_padding()
+        - flyingcircus_numeric.cyclic_padding()
+        - flyingcircus_numeric.symmetric_padding()
+        - flyingcircus_numeric.reframe()
 
     Examples:
         >>> arr = arange_nd((2, 3))
@@ -4655,7 +4655,7 @@ def gradients(
         arrs (np.ndarray): The output array.
 
     See Also:
-        - flyingcircus.extra.gradient_kernels()
+        - flyingcircus_numeric.gradient_kernels()
     """
     arr, mask = padding(arr, pad_width)
     arrs = tuple(
@@ -4689,7 +4689,7 @@ def exp_gradients(
         arrs (np.ndarray): The output array.
 
     See Also:
-        - flyingcircus.extra.exp_gradient_kernels()
+        - flyingcircus_numeric.exp_gradient_kernels()
     """
     arr, mask = padding(arr, pad_width)
     arrs = tuple(
@@ -4881,7 +4881,7 @@ def auto_bins(
         arrs (Iterable[np.ndarray]): The input arrays.
         method (str|Iterable[str]|None): The method for calculating bins.
             If str, the same method is applied to both arrays.
-            See `flyingcircus.extra.auto_bin()` for available methods.
+            See `flyingcircus_numeric.auto_bin()` for available methods.
         dim (int|None): The dimension of the histogram.
         combine (callable|None): Combine each bin using the combine function.
             combine(n_bins) -> n_bin
@@ -5702,9 +5702,9 @@ def otsu_threshold(
         items (Iterable): The input items.
         bins (int|str|None): Number of bins used to calculate histogram.
             If str or None, this is automatically calculated from the data
-            using `flyingcircus.extra.auto_bin()` with `method` set to
+            using `flyingcircus_numeric.auto_bin()` with `method` set to
             `bins` if str,
-            and using the default `flyingcircus.extra.auto_bin()` method if
+            and using the default `flyingcircus_numeric.auto_bin()` method if
             set to
             None.
 
@@ -5911,8 +5911,8 @@ def avg(
         array([13.33333333, 15.        , 15.33333333, 16.33333333])
 
     See Also:
-        - flyingcircus.extra.var()
-        - flyingcircus.extra.std()
+        - flyingcircus_numeric.var()
+        - flyingcircus_numeric.std()
         - np.std()
         - np.var()
     """
@@ -5983,8 +5983,8 @@ def var(
             Its shape depends on the value of axis.
 
     See Also:
-        - flyingcircus.extra.avg()
-        - flyingcircus.extra.std()
+        - flyingcircus_numeric.avg()
+        - flyingcircus_numeric.std()
         - np.mean()
         - np.average()
         - np.std()
@@ -6066,8 +6066,8 @@ def std(
         True
 
     See Also:
-        - flyingcircus.extra.avg()
-        - flyingcircus.extra.std()
+        - flyingcircus_numeric.avg()
+        - flyingcircus_numeric.std()
         - np.mean()
         - np.average()
         - np.std()
@@ -6124,8 +6124,8 @@ def gavg(
 
     See Also:
         - scipy.stats.gmean()
-        - flyingcircus.extra.avg()
-        - flyingcircus.extra.std()
+        - flyingcircus_numeric.avg()
+        - flyingcircus_numeric.std()
         - np.mean()
         - np.average()
         - np.std()
@@ -6261,7 +6261,7 @@ def apply_mask(
         mask (np.ndarray|None): The mask array.
             If np.ndarray, the shape of `arr` and `mask` must be identical,
             broadcastable through `np.broadcast_to()`, or unsqueezable using
-            `flyingcircus.extra.unsqueeze()`.
+            `flyingcircus_numeric.unsqueeze()`.
             If None, no masking is performed.
         borders (int|float|Sequence[int|float]|None): The border size(s).
             If None, the border is not modified.
@@ -6274,7 +6274,7 @@ def apply_mask(
             If Iterable, the size must match `arr` dimensions.
         background (int|float): The value used for masked-out pixels.
         do_unsqueeze (bool): Unsqueeze mask to input.
-            If True, use `flyingcircus.extra.unsqueeze()` on mask.
+            If True, use `flyingcircus_numeric.unsqueeze()` on mask.
             Only effective when `arr` and `mask` shapes do not match and
             are not already broadcastable.
             Otherwise, shapes must match or be broadcastable.
@@ -6288,7 +6288,7 @@ def apply_mask(
         ValueError: If the mask and array shapes are not compatible.
 
     See Also:
-        - flyingcircus.extra.padding()
+        - flyingcircus_numeric.padding()
     """
     if mask is not None:
         mask = mask.astype(bool)
@@ -6376,8 +6376,8 @@ def frame(
     Add a background frame to an array specifying the borders.
 
     This is essentially a more convenient interface to
-    `flyingcircus.extra.padding()`.
-    Also, the output `mask` from `flyingcircus.extra.padding()` is discarded.
+    `flyingcircus_numeric.padding()`.
+    Also, the output `mask` from `flyingcircus_numeric.padding()` is discarded.
 
     Args:
         arr (np.ndarray): The input array.
@@ -6393,8 +6393,8 @@ def frame(
         result (np.ndarray): The padded array.
 
     See Also:
-        - flyingcircus.extra.reframe()
-        - flyingcircus.extra.padding()
+        - flyingcircus_numeric.reframe()
+        - flyingcircus_numeric.padding()
 
     Examples:
         >>> arr = arange_nd((2, 3)) + 1
@@ -6425,15 +6425,15 @@ def reframe(
     Args:
         arr (np.ndarray): The input array.
             Its shape is passed as `shape` to
-            `flyingcircus.extra.shape_to_pad_width()`.
+            `flyingcircus_numeric.shape_to_pad_width()`.
         shape (int|Iterable[int]): The shape of the output array.
-            Passed as `new_shape` to `flyingcircus.extra.shape_to_pad_width()`.
+            Passed as `new_shape` to `flyingcircus_numeric.shape_to_pad_width()`.
         position (int|float|Iterable[int|float]): Position within new shape.
-            Passed as `position` to `flyingcircus.extra.shape_to_pad_width()`.
+            Passed as `position` to `flyingcircus_numeric.shape_to_pad_width()`.
         mode (str|Number): The padding mode.
-            This is passed to `flyingcircus.extra.padding()`.
+            This is passed to `flyingcircus_numeric.padding()`.
         rounding (callable): The rounding method for the position.
-            Passed as `rounding` to `flyingcircus.extra.shape_to_pad_width()`.
+            Passed as `rounding` to `flyingcircus_numeric.shape_to_pad_width()`.
         **_kws: Keyword parameters for `flyingcircus.padding()`.
 
     Returns:
@@ -6444,8 +6444,8 @@ def reframe(
         ValueError: output shape cannot be smaller than the input shape.
 
     See Also:
-        - flyingcircus.extra.frame()
-        - flyingcircus.extra.padding()
+        - flyingcircus_numeric.frame()
+        - flyingcircus_numeric.padding()
 
     Examples:
         >>> arr = np.ones(4, dtype=int)
@@ -6540,13 +6540,13 @@ def multi_reframe(
             If None, the uses the minimum shape that would fit all input
             arrays.
         positions (int|float|Iterable[int|float]): Position within new shape.
-            See `flyingcircus.extra.reframe()` for more info.
+            See `flyingcircus_numeric.reframe()` for more info.
         background (Number): The background value for the frame.
         dtype (data-type): Desired output data-type.
             If None, its guessed from dtype of arrs.
             See `np.ndarray()` for more.
         rounding (callable): The rounding method for the position.
-            Passed as `rounding` to `flyingcircus.extra.shape_to_pad_width()`.
+            Passed as `rounding` to `flyingcircus_numeric.shape_to_pad_width()`.
 
     Returns:
         result (np.ndarray): The output array.
@@ -6731,7 +6731,7 @@ def zoom(
         extra_dim (bool): Force extra dimensions in the zoom parameters.
         fill_dim (bool): Dimensions not specified are left untouched.
         cx_mode (str): Complex calculation mode.
-            This is passed as `mode` to `flyingcircus.extra.filter_cx()`.
+            This is passed as `mode` to `flyingcircus_numeric.filter_cx()`.
 
     Returns:
         result (np.ndarray): The output array.
@@ -6778,7 +6778,7 @@ def resample(
         new_shape (Iterable[int|None]): New dimensions of the array.
         aspect (callable|Iterable[callable]|None): Zoom shape manipulation.
             Useful for obtaining specific aspect ratio effects.
-            This is passed to `flyingcircus.extra.shape2zoom()`.
+            This is passed to `flyingcircus_numeric.shape2zoom()`.
         window (int|Iterable[int]|None): Uniform pre-filter window size.
             This is the size of the window for the uniform filter using
             `scipy.ndimage.uniform_filter()`.
@@ -6790,13 +6790,13 @@ def resample(
         extra_dim (bool): Force extra dimensions in the zoom parameters.
         fill_dim (bool): Dimensions not specified are left untouched.
         cx_mode (str): Complex calculation mode.
-            This is passed as `mode` to `flyingcircus.extra.filter_cx()`.
+            This is passed as `mode` to `flyingcircus_numeric.filter_cx()`.
 
     Returns:
         arr (np.ndarray): The output array.
 
     See Also:
-        - flyingcircus.extra.zoom()
+        - flyingcircus_numeric.zoom()
     """
     factors = shape2zoom(arr.shape, new_shape, aspect)
     factors, shape = zoom_prepare(
@@ -7037,8 +7037,8 @@ def angles2rotation(
         lin_mat (np.ndarray): The rotation matrix as defined by the angles.
 
     See Also:
-        - flyingcircus.extra.square_size_to_num_tria(),
-        - flyingcircus.extra.num_tria_to_square_size(),
+        - flyingcircus_numeric.square_size_to_num_tria(),
+        - flyingcircus_numeric.num_tria_to_square_size(),
         - itertools.combinations()
 
     Examples:
@@ -7114,7 +7114,7 @@ def rotation2angles(
     Args:
         lin_mat (np.ndarray): The rotation matrix.
         axes_list (Iterable[Iterable[int]]|None): The axes of rotation planes.
-            See `flyingcircus.extra.angles2rotation()` for more details.
+            See `flyingcircus_numeric.angles2rotation()` for more details.
         use_degree (bool): Interpret angles as expressed in degree.
             Otherwise, use radians.
 
@@ -7317,10 +7317,10 @@ def weighted_center(
         center (np.ndarray): The coordinates of the weighed center.
 
     See Also:
-        - flyingcircus.extra.tensor_of_inertia()
-        - flyingcircus.extra.rotatio_axes()
-        - flyingcircus.extra.auto_rotation()
-        - flyingcircus.extra.realigning()
+        - flyingcircus_numeric.tensor_of_inertia()
+        - flyingcircus_numeric.rotatio_axes()
+        - flyingcircus_numeric.auto_rotation()
+        - flyingcircus_numeric.realigning()
     """
     # numpy.double to improve the accuracy of the norm and the weighted center
     arr = arr.astype(np.double)
@@ -7367,10 +7367,10 @@ def weighted_covariance(
         cov (np.ndarray): The covariance weight matrix from the origin.
 
     See Also:
-        - flyingcircus.extra.tensor_of_inertia
-        - flyingcircus.extra.rotation_axes
-        - flyingcircus.extra.auto_rotation
-        - flyingcircus.extra.realigning
+        - flyingcircus_numeric.tensor_of_inertia
+        - flyingcircus_numeric.rotation_axes
+        - flyingcircus_numeric.auto_rotation
+        - flyingcircus_numeric.realigning
     """
     # numpy.double to improve the accuracy of the norm and the weighted center
     arr = arr.astype(np.double)
@@ -7423,10 +7423,10 @@ def tensor_of_inertia(
         inertia (np.ndarray): The tensor of inertia from the origin.
 
     See Also:
-        - flyingcircus.extra.weighted_covariance()
-        - flyingcircus.extra.rotation_axes()
-        - flyingcircus.extra.auto_rotation()
-        - flyingcircus.extra.realigning()
+        - flyingcircus_numeric.weighted_covariance()
+        - flyingcircus_numeric.rotation_axes()
+        - flyingcircus_numeric.auto_rotation()
+        - flyingcircus_numeric.realigning()
     """
     cov = weighted_covariance(arr, labels, index, origin)
     inertia = np.eye(arr.ndim) * np.trace(cov) - cov
@@ -7463,10 +7463,10 @@ def rotation_axes(
         axes (list[np.ndarray]): The principal axes of rotation.
 
     See Also:
-        - flyingcircus.extra.weighted_covariance()
-        - flyingcircus.extra.tensor_of_inertia()
-        - flyingcircus.extra.auto_rotation()
-        - flyingcircus.extra.realigning()
+        - flyingcircus_numeric.weighted_covariance()
+        - flyingcircus_numeric.tensor_of_inertia()
+        - flyingcircus_numeric.auto_rotation()
+        - flyingcircus_numeric.realigning()
     """
     # calculate the tensor of inertia with respect to the weighted center
     inertia = tensor_of_inertia(arr, labels, index, None).astype(np.double)
@@ -7540,13 +7540,13 @@ def auto_rotation(
     See Also:
         - scipy.ndimage.center_of_mass()
         - scipy.ndimage.affine_transform()
-        - flyingcircus.extra.weighted_covariance()
-        - flyingcircus.extra.tensor_of_inertia()
-        - flyingcircus.extra.rotation_axes()
-        - flyingcircus.extra.angles2linear()
-        - flyingcircus.extra.linear2angles()
-        - flyingcircus.extra.auto_rotation()
-        - flyingcircus.extra.realigning()
+        - flyingcircus_numeric.weighted_covariance()
+        - flyingcircus_numeric.tensor_of_inertia()
+        - flyingcircus_numeric.rotation_axes()
+        - flyingcircus_numeric.angles2linear()
+        - flyingcircus_numeric.linear2angles()
+        - flyingcircus_numeric.auto_rotation()
+        - flyingcircus_numeric.realigning()
     """
     lin_mat = rotation_axes_to_matrix(rotation_axes(arr, labels, index, True))
     return prepare_affine(arr.shape, lin_mat, origin=origin)
@@ -7586,13 +7586,13 @@ def auto_shifting(
     See Also:
         - scipy.ndimage.center_of_mass()
         - scipy.ndimage.affine_transform()
-        - flyingcircus.extra.weighted_covariance()
-        - flyingcircus.extra.tensor_of_inertia()
-        - flyingcircus.extra.rotation_axes()
-        - flyingcircus.extra.angles2linear()
-        - flyingcircus.extra.linear2angles()
-        - flyingcircus.extra.auto_rotation()
-        - flyingcircus.extra.realigning()
+        - flyingcircus_numeric.weighted_covariance()
+        - flyingcircus_numeric.tensor_of_inertia()
+        - flyingcircus_numeric.rotation_axes()
+        - flyingcircus_numeric.angles2linear()
+        - flyingcircus_numeric.linear2angles()
+        - flyingcircus_numeric.auto_rotation()
+        - flyingcircus_numeric.realigning()
     """
     lin_mat = np.eye(arr.ndim)
     com = np.array(sp.ndimage.center_of_mass(arr, labels, index))
@@ -7634,13 +7634,13 @@ def realigning(
     See Also:
         - scipy.ndimage.center_of_mass()
         - scipy.ndimage.affine_transform()
-        - flyingcircus.extra.weighted_covariance()
-        - flyingcircus.extra.tensor_of_inertia()
-        - flyingcircus.extra.rotation_axes()
-        - flyingcircus.extra.angles2linear()
-        - flyingcircus.extra.linear2angles()
-        - flyingcircus.extra.auto_rotation()
-        - flyingcircus.extra.auto_shift()
+        - flyingcircus_numeric.weighted_covariance()
+        - flyingcircus_numeric.tensor_of_inertia()
+        - flyingcircus_numeric.rotation_axes()
+        - flyingcircus_numeric.angles2linear()
+        - flyingcircus_numeric.linear2angles()
+        - flyingcircus_numeric.auto_rotation()
+        - flyingcircus_numeric.auto_shift()
     """
     com = np.array(sp.ndimage.center_of_mass(arr, labels, index))
     lin_mat = rotation_axes_to_matrix(rotation_axes(arr, labels, index, True))
@@ -7950,14 +7950,14 @@ def rolling_window_nd(
             - 'full': the full output is provided.
         pad_mode (Number|str): The padding mode.
             If `out_mode` is `valid` or `view` this parameter is ignored.
-            This is passed as `mode` to `flyingcircus.extra.padding()`.
+            This is passed as `mode` to `flyingcircus_numeric.padding()`.
         pad_kws (Mappable|None): Keyword parameters for padding.
             If `out_mode` is `valid` or `view` this parameter is ignored.
-            This is passed as `mode` to `flyingcircus.extra.padding()`.
+            This is passed as `mode` to `flyingcircus_numeric.padding()`.
         writeable (bool): Determine if the result entries can be overwritten.
-            This is passed to `flyingcircus.extra.nd_windowing()`.
+            This is passed to `flyingcircus_numeric.nd_windowing()`.
         shape_mode (str): Determine the shape of the result.
-            This is passed to `flyingcircus.extra.nd_windowing()`.
+            This is passed to `flyingcircus_numeric.nd_windowing()`.
 
     Returns:
         result (np.ndarray): The windowing array.
@@ -8010,10 +8010,10 @@ def moving_mean(
         array([3., 4., 5., 6.])
 
     See Also:
-        - flyingcircus.extra.moving_average()
-        - flyingcircus.extra.moving_apply()
-        - flyingcircus.extra.running_apply()
-        - flyingcircus.extra.rolling_apply_nd()
+        - flyingcircus_numeric.moving_average()
+        - flyingcircus_numeric.moving_apply()
+        - flyingcircus_numeric.running_apply()
+        - flyingcircus_numeric.rolling_apply_nd()
     """
     arr = arr.ravel()
     arr = np.cumsum(arr)
@@ -8069,10 +8069,10 @@ def moving_average(
                6.16666667, 7.16666667])
 
     See Also:
-        - flyingcircus.extra.moving_mean()
-        - flyingcircus.extra.moving_apply()
-        - flyingcircus.extra.running_apply()
-        - flyingcircus.extra.rolling_apply_nd()
+        - flyingcircus_numeric.moving_mean()
+        - flyingcircus_numeric.moving_apply()
+        - flyingcircus_numeric.running_apply()
+        - flyingcircus_numeric.rolling_apply_nd()
     """
     arr = arr.ravel()
     if isinstance(weights, int):
@@ -8111,7 +8111,7 @@ def moving_apply(
     Also the `func` callable is required to accept an `axis` parameter.
 
     If the `weights` functionality is not required, then
-    `flyingcircus.extra.rolling_apply_nd()` is a faster alternative.
+    `flyingcircus_numeric.rolling_apply_nd()` is a faster alternative.
 
     Args:
         arr (np.ndarray): The input array.
@@ -8167,10 +8167,10 @@ def moving_apply(
                6.16666667, 7.16666667])
 
     See Also:
-        - flyingcircus.extra.moving_mean()
-        - flyingcircus.extra.moving_average()
-        - flyingcircus.extra.running_apply()
-        - flyingcircus.extra.rolling_apply_nd()
+        - flyingcircus_numeric.moving_mean()
+        - flyingcircus_numeric.moving_average()
+        - flyingcircus_numeric.running_apply()
+        - flyingcircus_numeric.rolling_apply_nd()
     """
     arr = arr.ravel()
     if isinstance(weights, int):
@@ -8292,10 +8292,10 @@ def running_apply(
                6.16666667, 7.16666667])
 
     See Also:
-        - flyingcircus.extra.moving_mean()
-        - flyingcircus.extra.moving_average()
-        - flyingcircus.extra.moving_apply()
-        - flyingcircus.extra.rolling_apply_nd()
+        - flyingcircus_numeric.moving_mean()
+        - flyingcircus_numeric.moving_average()
+        - flyingcircus_numeric.moving_apply()
+        - flyingcircus_numeric.rolling_apply_nd()
     """
     arr = arr.ravel()
     if isinstance(weights, int):
@@ -8367,18 +8367,18 @@ def rolling_apply_nd(
     Args:
         arr (np.ndarray): The input array.
         window (int|Iterable[int]): The window sizes.
-            This is passed to `flyingcircus.extra.rolling_window_nd()`.
+            This is passed to `flyingcircus_numeric.rolling_window_nd()`.
         steps (int|Iterable[int]): The step sizes.
-            This is passed to `flyingcircus.extra.rolling_window_nd()`.
+            This is passed to `flyingcircus_numeric.rolling_window_nd()`.
         window_steps (int|Iterable[int]): The window step sizes.
-            This is passed to `flyingcircus.extra.rolling_window_nd()`.
+            This is passed to `flyingcircus_numeric.rolling_window_nd()`.
         out_mode (str): The output mode.
-            This is passed to `flyingcircus.extra.rolling_window_nd()`.
+            This is passed to `flyingcircus_numeric.rolling_window_nd()`.
             Note that `view` is treated identical to `valid`.
         pad_mode (Number|str): The padding mode.
-            This is passed to `flyingcircus.extra.rolling_window_nd()`.
+            This is passed to `flyingcircus_numeric.rolling_window_nd()`.
         pad_kws (dict|Iterable[Iterable]): Keyword parameters for padding.
-            This is passed to `flyingcircus.extra.rolling_window_nd()`.
+            This is passed to `flyingcircus_numeric.rolling_window_nd()`.
         func (callable): The function to apply.
             Must have the following signature:
              func(np.ndarray, axis=int|Sequence[int], *_args, **_kws)
@@ -8454,10 +8454,10 @@ def rolling_apply_nd(
          [29.  29.5 30.5 31.5 32.5 33.5 34.5 35. ]]
 
     See Also:
-        - flyingcircus.extra.moving_mean()
-        - flyingcircus.extra.moving_average()
-        - flyingcircus.extra.moving_apply()
-        - flyingcircus.extra.running_apply()
+        - flyingcircus_numeric.moving_mean()
+        - flyingcircus_numeric.moving_average()
+        - flyingcircus_numeric.moving_apply()
+        - flyingcircus_numeric.running_apply()
     """
     args = tuple(args) if args else ()
     kws = dict(kws) if kws else {}

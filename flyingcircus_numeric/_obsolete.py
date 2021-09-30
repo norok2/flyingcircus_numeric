@@ -535,8 +535,8 @@ def frame(
         result (np.ndarray): The result array with added borders.
 
     See Also:
-        - flyingcircus.extra.reframe()
-        - flyingcircus.extra.padding()
+        - flyingcircus_numeric.reframe()
+        - flyingcircus_numeric.padding()
     """
     borders = base.auto_repeat(borders, arr.ndim)
     if any(borders) < 0:
@@ -594,8 +594,8 @@ def reframe(
         ValueError: output shape cannot be smaller than the input shape.
 
     See Also:
-        - flyingcircus.extra.frame()
-        - flyingcircus.extra.padding()
+        - flyingcircus_numeric.frame()
+        - flyingcircus_numeric.padding()
 
     Examples:
         >>> arr = np.ones((2, 3))
