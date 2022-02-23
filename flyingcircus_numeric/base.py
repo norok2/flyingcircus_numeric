@@ -7911,12 +7911,12 @@ def angles_in_ellipse(
         rot_offset = np.pi / 2.0
     angles = 2 * np.pi * np.arange(num) / num
     if a != b:
-        e = (1.0 - b ** 2.0 / a ** 2.0) ** 0.5
-        tot_size = sp.special.ellipeinc(2.0 * np.pi, e)
+        eSq = 1.0 - b ** 2.0 / a ** 2.0
+        tot_size = sp.special.ellipeinc(2.0 * np.pi, eSq)
         arc_size = tot_size / num
-        arcs = np.arange(num) * arc_size + sp.special.ellipeinc(offset, e)
+        arcs = np.arange(num) * arc_size + sp.special.ellipeinc(offset, eSq)
         res = sp.optimize.root(
-            lambda x: (sp.special.ellipeinc(x, e) - arcs), angles)
+            lambda x: (sp.special.ellipeinc(x, eSq) - arcs), angles)
         angles = res.x
     return angles + rot_offset
 
