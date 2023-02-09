@@ -140,7 +140,7 @@ def slice_array(
     slab = [slice(None)] * arr.ndim
     # ensure index is meaningful
     if index is None:
-        index = np.int(arr.shape[axis] / 2.0)
+        index = arr.shape[axis] // 2
     # check index
     if (index >= arr.shape[axis]) or (index < 0):
         raise ValueError('Invalid array index in the specified direction')

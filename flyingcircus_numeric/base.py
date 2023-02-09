@@ -616,7 +616,7 @@ def nbytes(arr):
             This also works for views/broadcasted/strided arrays.
 
     Examples:
-        >>> arr = np.array([1, 2, 3], dtype=np.int64)
+        # >>> arr = np.array([1, 2, 3], dtype=np.int_)
         >>> print(nbytes(arr) == arr.nbytes)
         True
 
@@ -5328,7 +5328,7 @@ def bijective_part(arr, invert=False):
     # boundaries are considered pseudo-local maxima and minima
     # but are not included in local_mins / local_maxs
     # therefore they are added manually
-    extrema = np.zeros((len(local_mins) + len(local_maxs)) + 2, dtype=np.int)
+    extrema = np.zeros((len(local_mins) + len(local_maxs)) + 2, dtype=np.int_)
     extrema[-1] = len(arr) - 1
     if len(local_mins) > 0 and len(local_maxs) > 0:
         # start with smallest maxima or minima
@@ -6614,7 +6614,7 @@ def multi_reframe(
     if new_shape is None:
         shapes = [arr.shape for arr in arrs]
         new_shape = [1] * max(len(shape) for shape in shapes)
-        shape_arr = np.ones((len(shapes), len(new_shape))).astype(np.int)
+        shape_arr = np.ones((len(shapes), len(new_shape)), dtype=np.int_)
         for i, shape in enumerate(shapes):
             shape_arr[i, :len(shape)] = np.array(shape)
         new_shape = tuple(
@@ -6909,7 +6909,7 @@ def multi_resample(
     if new_shape is None:
         shapes = [arr.shape for arr in arrs]
         new_shape = [1] * max(len(shape) for shape in shapes)
-        shape_arr = np.ones((len(shapes), len(new_shape))).astype(np.int)
+        shape_arr = np.ones((len(shapes), len(new_shape)), dtype=np.int_)
         for i, shape in enumerate(shapes):
             shape_arr[i, :len(shape)] = np.array(shape)
         combiner = fc.lcm if lossless else max
