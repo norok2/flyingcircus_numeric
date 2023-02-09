@@ -5214,7 +5214,7 @@ def mutual_information(
     # # alternate implementation
     # hist, x_edges, y_edges = np.histogram2d(arr1, arr2, bins=bins)
     # g, p, dof, expected = scipy.stats.chi2_contingency(
-    #     hist + np.finfo(np.float).eps, lambda_='log-likelihood')
+    #     hist + np.finfo(np.float_).eps, lambda_='log-likelihood')
     # mi = g / hist.sum() / 2
 
     if base:
@@ -8545,7 +8545,7 @@ def rel_err(
                0.01652893])
     """
     if arr2.dtype != np.complex:
-        arr = (arr2 - arr1).astype(np.float)
+        arr = (arr2 - arr1).astype(np.float_)
     else:
         arr = (arr2 - arr1)
     if use_average:
